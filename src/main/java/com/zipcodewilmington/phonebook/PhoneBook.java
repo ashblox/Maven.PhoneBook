@@ -1,5 +1,6 @@
 package com.zipcodewilmington.phonebook;
 
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -7,14 +8,44 @@ import java.util.TreeMap;
  */
 public class PhoneBook {
 
+    TreeMap<String, String> people;
+
     public PhoneBook() {
-        TreeMap<String, String> people = new TreeMap<String, String>();
+        this.people = new TreeMap<String, String>();
     }
 
     public void add(String name, String phoneNumber) {
-        add(name, phoneNumber);
+        people.put(name, phoneNumber);
     }
 
-    public void
+    public void remove(String name) {
+        people.remove(name);
+    }
+
+    public String lookup(String name) {
+        return people.get(name);
+    }
+
+    public String reverseLookup(String phoneNumber) {
+        String name = "";
+        for (Map.Entry<String, String> entry: people.entrySet()) {
+            if (entry.getValue() == phoneNumber) {
+                name = entry.getKey();
+            }
+        }
+        return name;
+    }
+
+    public String display() {
+        String allNames = "";
+        for (Map.Entry<String, String> entry: people.entrySet()) {
+            allNames += entry.getKey() + " ";
+            allNames += entry.getValue() + "\n";
+        }
+        allNames = allNames.trim();
+        return allNames;
+    }
+
+
 
 }
