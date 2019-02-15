@@ -4,6 +4,8 @@ package com.zipcodewilmington.phonebook;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by leon on 1/23/18.
@@ -11,64 +13,94 @@ import org.junit.Test;
 public class PhoneBookTest {
 
     @Test
-    public void addTest() {
+    public void addTest1() {
         // Given a phonebook exists
         PhoneBook phonebook = new PhoneBook();
         String name = "name";
-        String phoneNumber = "1234567";
+        String phoneNumber = "";
+        ArrayList<String> expected = new ArrayList<String>();
+        expected.add(phoneNumber);
 
-        // When a name is added to the phonebook
+        // When a new name is added to the phonebook
         phonebook.add(name, phoneNumber);
-        String retrievedNumber = phonebook.lookup(name);
+        ArrayList<String> actual = phonebook.lookup(name);
 
-        // Then the retrieved number should equal the phone number associated with the name added
-        Assert.assertEquals(phoneNumber, retrievedNumber);
+        // Then the retrieved number(s) should equal the phone number associated with the name added
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
-    public void removeTest() {
-        // Given a phonebook exists and a name and number are added to it
+    public void addTest2() {
+        // Given a phonebook exists with a contact (name & number) pre-existing; and a new phone number exists
         PhoneBook phonebook = new PhoneBook();
         String name = "name";
-        String phoneNumber = "123-4567";
+        String initialPhoneNumber = "";
+        phonebook.add(name, initialPhoneNumber);
+        String newPhoneNumber = "";
+        ArrayList<String> expected = new ArrayList<String>();
+        expected.add(initialPhoneNumber);
+        expected.add(newPhoneNumber);
+
+
+        // When a name is added to the phonebook
+        phonebook.add(name, newPhoneNumber);
+        ArrayList<String> actual = phonebook.lookup(name);
+
+        // Then the retrieved number should equal the phone number associated with the name added
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void removeRecordTest() {
+        // Given a phonebook exists with a given name and number
+        PhoneBook phonebook = new PhoneBook();
+        String name = "name";
+        String phoneNumber = "";
         phonebook.add(name, phoneNumber);
 
         // When we remove the contact from the phonebook & try to look them up by their name
-        phonebook.remove(name);
-        String retrievedNumber = phonebook.lookup(name);
+        phonebook.removeRecord(name);
+        ArrayList<String> retrievedNumbers = phonebook.lookup(name);
 
-        // Then the retrieved phone number should be null since the contact no longer exists
-        Assert.assertNull(retrievedNumber);
+        // Then the retrieved list of numbers should be null since the contact no longer exists
+        Assert.assertNull(retrievedNumbers);
     }
 
     @Test
     public void lookupTest() {
-        // Given a phonebook exists and a name and number are added to it
+        // Given a phonebook exists with a given name and number
         PhoneBook phonebook = new PhoneBook();
         String name = "name";
-        String phoneNumber = "123-4567";
-        phonebook.add(name, phoneNumber);
+        String phoneNumber1 = "";
+        phonebook.add(name, phoneNumber1);
+        String phoneNumber2 = "";
+        phonebook.add(name, phoneNumber2);
+        ArrayList<String> expected = new ArrayList<String>();
+        expected.add(phoneNumber1);
+        expected.add(phoneNumber2);
 
         // When we lookup the person by their name, their phone number should be returned
-        String retrievedNumber = phonebook.lookup(name);
+        ArrayList<String> actual = phonebook.lookup(name);
 
         // Then the retrieved number should match the number we added to the phonebook
-        Assert.assertEquals(phoneNumber, retrievedNumber);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
     public void reverseLookupTest() {
-        // Given a phonebook exists and a name and number are added to it
+        // Given a phonebook exists and a name and set of numbers are added to it
         PhoneBook phonebook = new PhoneBook();
-        String name = "name";
-        String phoneNumber = "123-4567";
-        phonebook.add(name, phoneNumber);
+        String expected = "name";
+        String phoneNumber1 = "";
+        phonebook.add(expected, phoneNumber1);
+        String phoneNumber2 = "";
+        phonebook.add(expected, phoneNumber2);
 
         // When we reverse lookup a person by their number, their name should be returned
-        String retrievedName = phonebook.reverseLookup(phoneNumber);
+        String actual = phonebook.reverseLookup(phoneNumber1);
 
         // Then the retrieved name should match the name we added to the phonebook
-        Assert.assertEquals(name, retrievedName);
+        Assert.assertEquals(expected, actual);
     }
 
     @Test
@@ -77,12 +109,15 @@ public class PhoneBookTest {
         PhoneBook phonebook = new PhoneBook();
         phonebook.add("Elsa", "543-6789");
         phonebook.add("Daniel", "456-9876");
+        phonebook.add("Daniel", "567-3467");
         phonebook.add("Audrey", "345-9845");
+        phonebook.add("Elsa", "345-8764");
+        String expected = "Audrey 345-9845\nDaniel 456-9876 567-3467\nElsa 543-6789 345-8764";
 
         // When the display function is called, an alphabetical list of names and numbers should be returned
-        String listOfNamesAndNumbers = phonebook.display();
+        String actual = phonebook.display();
 
         // Then the list of numbers should show Audrey, Daniel, and Elsa (and their numbers) in that order
-        Assert.assertEquals("Audrey 345-9845\nDaniel 456-9876\nElsa 543-6789", listOfNamesAndNumbers);
+        Assert.assertEquals(expected, actual);
     }
 }
